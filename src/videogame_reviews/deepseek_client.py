@@ -82,6 +82,11 @@ class DeepSeekClient:
                     temperature=self.config.temperature,
                     max_tokens=max_tokens,
                     stream=False,
+                    extra_body={
+                        "thinking": {
+                            "type": "enabled" if self.config.thinking_enabled else "disabled"
+                        }
+                    },
                 )
                 aggregate.calls += 1
                 aggregate.prompt_tokens += int(raw_usage.get("prompt_tokens", 0))

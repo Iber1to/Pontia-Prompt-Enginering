@@ -8,7 +8,7 @@ El notebook `Ejercicio 2.ipynb` explica y orquesta el trabajo. La lógica probad
 
 1. carga, exploración y selección determinista de las 100 reseñas más largas;
 2. filtrado con `deepseek-v4-flash`, lotes de 5;
-3. extracción con `deepseek-v4-pro`, lotes de 3;
+3. extracción con `deepseek-v4-pro`, lotes de 3 y modo de razonamiento desactivado;
 4. validación Pydantic, checkpoints y reconstrucción de duplicados;
 5. exportación de resultados y métricas.
 

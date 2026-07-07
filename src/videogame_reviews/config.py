@@ -20,6 +20,7 @@ class PipelineConfig:
     filter_max_tokens: int = 2000
     extraction_max_tokens: int = 4000
     temperature: float = 0.0
+    thinking_enabled: bool = False
     request_timeout_seconds: float = 120.0
     max_attempts: int = 5
     initial_retry_seconds: float = 2.0

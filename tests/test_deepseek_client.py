@@ -22,6 +22,7 @@ class SequenceTransport:
         self.calls = 0
 
     def __call__(self, **kwargs):
+        assert kwargs["extra_body"] == {"thinking": {"type": "disabled"}}
         self.calls += 1
         outcome = next(self.outcomes)
         if isinstance(outcome, Exception):
