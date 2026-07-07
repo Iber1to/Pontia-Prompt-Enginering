@@ -1,0 +1,16 @@
+.worktrees/
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+Ejercicio 2.verificado.ipynb
+outputs/*
+!outputs/.gitkeep
+tmp/
