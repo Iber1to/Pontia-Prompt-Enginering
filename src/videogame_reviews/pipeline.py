@@ -12,6 +12,7 @@ from .config import PipelineConfig
 from .data import explore_reviews, load_reviews, prepare_sample
 from .deepseek_client import DeepSeekClient
 from .extraction import extract_reviews, serialize_list_columns
+from .evaluation import estimate_execution_plan
 from .persistence import atomic_write_json
 from .prompts import EXTRACTION_PROMPT_VERSION, FILTER_PROMPT_VERSION
 from .relevance import filter_reviews
@@ -98,7 +99,16 @@ def run_pipeline(
         all_errors.extend(errors)
         result["structured"] = structured
 
+    if stage in {"filter", "all"}:
+        metrics.execution_estimate = estimate_execution_plan(
+            sample,
+            relevant,
+            config.filter_batch_size,
+            config.extraction_batch_size,
+        )
+
     metrics.errors = all_errors
     metrics.status = "partial" if all_errors else "completed"
-    atomic_write_json(output / "run_metrics.json", metrics.model_dump(mode="json"))
+    metrics_name = "preprocess_metrics.json" if stage == "preprocess" else "run_metrics.json"
+    atomic_write_json(output / metrics_name, metrics.model_dump(mode="json"))
     return result

@@ -38,3 +38,18 @@ def test_full_pipeline_with_fake_client(tmp_path):
         assert (tmp_path / name).exists()
     metrics = json.loads((tmp_path / "run_metrics.json").read_text(encoding="utf-8"))
     assert metrics["sampled_rows"] == 4
+    assert metrics["execution_estimate"]["estimated_total_calls"] == 4
+    assert metrics["usage_scope"] == "current_process_only"
+
+
+def test_preprocess_does_not_overwrite_completed_run_metrics(tmp_path):
+    source = Path(__file__).parent / "fixtures" / "reviews.csv"
+    metrics_path = tmp_path / "run_metrics.json"
+    original = {"status": "completed", "relevant_rows": 3, "marker": "real-run"}
+    metrics_path.write_text(json.dumps(original), encoding="utf-8")
+    config = PipelineConfig(input_path=source, output_dir=tmp_path, sample_size=4)
+
+    run_pipeline(config, stage="preprocess")
+
+    assert json.loads(metrics_path.read_text(encoding="utf-8")) == original
+    assert (tmp_path / "preprocess_metrics.json").exists()

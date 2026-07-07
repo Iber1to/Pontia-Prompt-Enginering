@@ -52,7 +52,10 @@ class DeepSeekClient:
                 if status in {400, 401, 402, 422}:
                     raise PermanentLLMError(f"DeepSeek devolvió HTTP {status}") from error
                 if status in {429, 500, 503} or isinstance(error, TimeoutError):
-                    raise TransientLLMError(f"Error transitorio de DeepSeek: {status or 'timeout'}") from error
+                    detail = status or "timeout"
+                    raise TransientLLMError(
+                        f"Error transitorio de DeepSeek: {detail}"
+                    ) from error
                 raise TransientLLMError(f"Fallo de transporte: {type(error).__name__}") from error
             content = response.choices[0].message.content or ""
             usage = response.usage

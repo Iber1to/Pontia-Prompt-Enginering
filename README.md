@@ -43,13 +43,24 @@ result = run_pipeline(PipelineConfig(), stage="all")
 
 Etapas aceptadas: `preprocess`, `filter`, `extract` y `all`. Si una ejecución se interrumpe, repetirla reutiliza los checkpoints compatibles de `outputs/checkpoints`.
 
+## Decisiones de Prompt Engineering y límites
+
+- **Modelos:** `deepseek-v4-flash` se usa para la clasificación binaria por su menor coste y latencia. `deepseek-v4-pro` se reserva para la extracción de ocho atributos, donde prima la consistencia semántica. El modo de razonamiento se desactiva porque ambas tareas requieren JSON controlado, no razonamiento abierto.
+- **Lotes:** se envían 5 reseñas al filtro y 3 a la extracción. Con 80 textos únicos en la muestra y 79 relevantes únicos, el mínimo estimado es de **16 + 27 = 43 llamadas exitosas**. Los 20 duplicados no generan llamadas adicionales.
+- **Tokenización:** antes de ejecutar se estima la entrada mediante `ceil(caracteres_del_prompt/4)`. Sobre esta entrega se estiman 139.714 tokens de entrada para filtrado y 140.470 para extracción, 280.184 en total. Es una aproximación conservadora; el consumo facturado debe consultarse en la respuesta de uso de la API.
+- **Salida:** `max_tokens` se limita a 2.000 en filtrado y 4.000 en extracción para evitar JSON truncado sin permitir respuestas innecesariamente extensas.
+- **Ritmo y rate limits:** las llamadas son secuenciales, por lo que no se consume concurrencia. No se impone una pausa fija después de éxitos; ante 429, 500, 503, timeout, contenido vacío o JSON inválido se aplica backoff exponencial de 2, 4, 8 y 16 segundos, limitado a 30 segundos, con un máximo de 5 intentos.
+- **Interrupciones:** cada lote validado se guarda inmediatamente. Si se agota el saldo o persiste un límite, la ejecución termina parcial y una nueva ejecución continúa desde el checkpoint sin volver a pagar los lotes aceptados.
+- **Coste:** se calcula como tokens de entrada y salida por la tarifa vigente de cada modelo. Las tarifas no se fijan en código porque pueden cambiar; deben comprobarse en la documentación oficial de DeepSeek antes de ejecutar.
+
 ## Resultados
 
 - `sample_top_100.csv`: muestra exigida.
 - `relevance_results.csv`: decisión para las 100 filas.
 - `relevant_reviews.csv`: DataFrame reducido.
 - `structured_reviews.csv`: ocho atributos extraídos.
-- `run_metrics.json`: cobertura, llamadas, reintentos y tokens.
+- `run_metrics.json`: cobertura, llamadas, reintentos, tokens observados en el proceso y estimación completa. `usage_scope=current_process_only` aclara que las llamadas servidas desde checkpoints no vuelven a contabilizarse.
+- `preprocess_metrics.json`: métricas de una ejecución aislada de preprocesamiento; nunca sobrescribe `run_metrics.json`.
 
 Los CSV generados y checkpoints están excluidos de Git para evitar entregar resultados incompletos por accidente. Deben adjuntarse explícitamente junto al notebook cuando proceda.
 

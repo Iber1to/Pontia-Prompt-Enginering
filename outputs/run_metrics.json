@@ -8,9 +8,21 @@
   "clean_rows": 19712,
   "sampled_rows": 100,
   "unique_rows": 80,
-  "relevant_rows": 0,
+  "relevant_rows": 99,
   "cached_rows": 20,
   "errors": [],
+  "usage_scope": "current_process_only",
+  "execution_estimate": {
+    "filter_unique_reviews": 80,
+    "extraction_unique_reviews": 79,
+    "estimated_filter_calls": 16,
+    "estimated_extraction_calls": 27,
+    "estimated_total_calls": 43,
+    "estimated_filter_input_tokens": 139714,
+    "estimated_extraction_input_tokens": 140470,
+    "estimated_total_input_tokens": 280184,
+    "token_estimation_method": "ceil(caracteres_prompt/4)"
+  },
   "filter_usage": {
     "prompt_tokens": 0,
     "completion_tokens": 0,
@@ -19,13 +31,15 @@
     "retries": 0
   },
   "extraction_usage": {
-    "prompt_tokens": 0,
-    "completion_tokens": 0,
-    "total_tokens": 0,
-    "calls": 0,
-    "retries": 0
+    "prompt_tokens": 116937,
+    "completion_tokens": 36187,
+    "total_tokens": 153124,
+    "calls": 27,
+    "retries": 1
   },
   "duration_seconds": {
-    "preprocess": 0.427
+    "preprocess": 0.445,
+    "filter": 1.23,
+    "extract": 603.288
   }
 }

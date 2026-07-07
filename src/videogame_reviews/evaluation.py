@@ -2,7 +2,50 @@
 
 from __future__ import annotations
 
+import json
+import math
+
 import pandas as pd
+
+from .prompts import build_extraction_messages, build_filter_messages
+
+
+def estimate_execution_plan(
+    sample: pd.DataFrame,
+    relevant: pd.DataFrame,
+    filter_batch_size: int,
+    extraction_batch_size: int,
+) -> dict:
+    """Estima llamadas y tokens de entrada con cuatro caracteres por token."""
+
+    def stage_estimate(frame, batch_size, message_builder):
+        unique = frame.drop_duplicates("content_hash", keep="first")
+        rows = unique[["content_hash", "Contenido"]].to_dict(orient="records")
+        characters = 0
+        for start in range(0, len(rows), batch_size):
+            messages = message_builder(rows[start : start + batch_size])
+            characters += len(json.dumps(messages, ensure_ascii=False))
+        return len(rows), math.ceil(characters / 4)
+
+    filter_unique, filter_tokens = stage_estimate(
+        sample, filter_batch_size, build_filter_messages
+    )
+    extraction_unique, extraction_tokens = stage_estimate(
+        relevant, extraction_batch_size, build_extraction_messages
+    )
+    filter_calls = math.ceil(filter_unique / filter_batch_size)
+    extraction_calls = math.ceil(extraction_unique / extraction_batch_size)
+    return {
+        "filter_unique_reviews": filter_unique,
+        "extraction_unique_reviews": extraction_unique,
+        "estimated_filter_calls": filter_calls,
+        "estimated_extraction_calls": extraction_calls,
+        "estimated_total_calls": filter_calls + extraction_calls,
+        "estimated_filter_input_tokens": filter_tokens,
+        "estimated_extraction_input_tokens": extraction_tokens,
+        "estimated_total_input_tokens": filter_tokens + extraction_tokens,
+        "token_estimation_method": "ceil(caracteres_prompt/4)",
+    }
 
 
 def build_audit_sample(filtered: pd.DataFrame, seed: int = 26) -> pd.DataFrame:

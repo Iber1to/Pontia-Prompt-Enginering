@@ -88,6 +88,8 @@ class RunMetrics(StrictModel):
     relevant_rows: int = 0
     cached_rows: int = 0
     errors: list[str] = Field(default_factory=list)
+    usage_scope: str = "current_process_only"
+    execution_estimate: dict[str, int | str] = Field(default_factory=dict)
     filter_usage: UsageMetrics = Field(default_factory=UsageMetrics)
     extraction_usage: UsageMetrics = Field(default_factory=UsageMetrics)
     duration_seconds: dict[str, float] = Field(default_factory=dict)
