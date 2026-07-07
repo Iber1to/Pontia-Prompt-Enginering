@@ -1,0 +1,31 @@
+{
+  "status": "completed",
+  "filter_model": "deepseek-v4-flash",
+  "extraction_model": "deepseek-v4-pro",
+  "filter_prompt_version": "filter-v1.0",
+  "extraction_prompt_version": "extraction-v1.0",
+  "original_rows": 20000,
+  "clean_rows": 19712,
+  "sampled_rows": 100,
+  "unique_rows": 80,
+  "relevant_rows": 0,
+  "cached_rows": 20,
+  "errors": [],
+  "filter_usage": {
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "calls": 0,
+    "retries": 0
+  },
+  "extraction_usage": {
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "calls": 0,
+    "retries": 0
+  },
+  "duration_seconds": {
+    "preprocess": 0.427
+  }
+}
