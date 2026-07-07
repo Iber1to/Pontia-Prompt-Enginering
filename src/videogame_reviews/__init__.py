@@ -1,5 +1,6 @@
 """Pipeline reproducible para analizar reseñas de videojuegos."""
 
 from .config import PipelineConfig
+from .pipeline import run_pipeline
 
-__all__ = ["PipelineConfig"]
+__all__ = ["PipelineConfig", "run_pipeline"]
