@@ -62,7 +62,7 @@ Etapas aceptadas: `preprocess`, `filter`, `extract` y `all`. Si una ejecución s
 - `run_metrics.json`: cobertura, llamadas, reintentos, tokens observados en el proceso y estimación completa. `usage_scope=current_process_only` aclara que las llamadas servidas desde checkpoints no vuelven a contabilizarse.
 - `preprocess_metrics.json`: métricas de una ejecución aislada de preprocesamiento; nunca sobrescribe `run_metrics.json`.
 
-Los CSV generados y checkpoints están excluidos de Git para evitar entregar resultados incompletos por accidente. Deben adjuntarse explícitamente junto al notebook cuando proceda.
+Los CSV generados y checkpoints están excluidos de Git.
 
 ## Pruebas
 
