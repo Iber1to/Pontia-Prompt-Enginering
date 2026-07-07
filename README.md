@@ -87,4 +87,4 @@ Las pruebas usan clientes simulados y nunca consumen la API.
 
 ## Limitaciones
 
-La muestra por longitud favorece reseñas extensas y no representa necesariamente todo el dataset. No existe ground truth para relevancia o atributos, por lo que la auditoría final es cualitativa. Las reseñas están principalmente en inglés, mientras que las categorías y explicaciones se normalizan en español.
+La muestra por longitud favorece reseñas extensas y no representa necesariamente todo el dataset. No existe ground truth para relevancia o atributos, por lo que la auditoría final es cualitativa. Las reseñas están principalmente en inglés, mientras que las categorías y explicaciones se normalizan en español de España.
